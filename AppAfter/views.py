@@ -21,3 +21,17 @@ def persona(request):
 
     return HttpResponse(documento)
 
+def inicio(request):
+    return render(request, 'AppAfter/inicio.html')
+
+def profesores(request):
+    return HttpResponse("esta es la pagina de profesores")
+
+def estudiantes(request):
+    return HttpResponse("esta es la pagina de estudiantes")
+
+def cursos(request):
+    return HttpResponse("esta es la pagina de cursos")
+
+def entregables(request):
+    return HttpResponse("esta es la pagina de entregables")
