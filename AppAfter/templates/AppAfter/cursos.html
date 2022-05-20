@@ -1,0 +1,27 @@
+{% extends "AppAfter/padre.html" %} 
+
+{% load static %}
+
+{% block contenidoQueCambia %} 
+
+{% if formulario.errors %} 
+
+<p style="color:red;">ALGO ESTA MAL</p>
+
+{% endif %} 
+
+<form action= "{% url 'cursos'%}" method="POST">{% csrf_token %}
+
+    <table>
+        {{ formulario.as_table }}
+    </table>
+
+    <input type="submit" value="Enviar formulario hecho en API">
+</form>
+
+{% endblock %}
+
+{% block titulo %} 
+
+    <h1>cursos!</h1>
+{% endblock %} 

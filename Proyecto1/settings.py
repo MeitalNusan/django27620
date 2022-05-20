@@ -55,7 +55,7 @@ ROOT_URLCONF = 'Proyecto1.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["C:/Users/Usuario/Desktop/MVTMeitalNusan - copia/Proyecto1/AppAfter/index"],
+        'DIRS': ["C:/Users/Usuario/Desktop/Clase 19/django27620/AppAfter/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

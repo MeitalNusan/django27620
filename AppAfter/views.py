@@ -4,6 +4,7 @@ from datetime import date
 import datetime
 from django.template import Template, Context, loader
 from .models import *
+from AppAfter.forms import CursoFormulario
 
 def persona(request):
     dia=datetime.now().year
@@ -25,13 +26,47 @@ def inicio(request):
     return render(request, 'AppAfter/inicio.html')
 
 def profesores(request):
-    return HttpResponse("esta es la pagina de profesores")
+    return render(request, "AppAfter/profesores.html")
 
 def estudiantes(request):
-    return HttpResponse("esta es la pagina de estudiantes")
+    return render(request, "AppAfter/estudiantes.html")
 
-def cursos(request):
-    return HttpResponse("esta es la pagina de cursos")
 
 def entregables(request):
-    return HttpResponse("esta es la pagina de entregables")
+     return render(request, "AppAfter/entregables.html")
+
+def cursos(request):
+    if request.method =='POST':
+
+        miFormulario=CursoFormulario(request.POST)
+
+        if miFormulario.is_valid():
+            informacion=miFormulario.cleaned_data
+            curso=Curso(nombre=informacion['nombre'], comision=informacion['comision'])
+            curso.save()
+            return render(request,'AppAfter/inicio.html')
+
+    else:
+        miFormulario=CursoFormulario()
+    return render(request, "AppAfter/cursos.html" , {'formulario':miFormulario})
+
+def busquedaComision(request):
+    return render(request,'AppAfter/busquedaComision.html')
+
+def buscar(request):
+    if request.GET['comision']:
+        comision=request.GET['comision']
+        cursos=Curso.objects.filter(comision=comision)
+        return render(request, "AppAfter/resultadosBusqueda.html", {'cursos': cursos, 'comision': comision})
+    else:
+        respuesta="No se ingreso ninguna comision"
+        return render(request, "AppAfter/resultadosBusqueda.html", {'respuesta':respuesta})
+
+def leerCursos(request):
+    cursos=Curso.objects.all()
+    return(request, "AppAfter/cursos.html", {'cursos': cursos} )
+
+
+
+
+    

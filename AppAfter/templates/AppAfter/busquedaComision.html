@@ -1,0 +1,21 @@
+{% extends "AppAfter/padre.html" %} 
+
+{% load static %}
+
+{% block contenidoQueCambia %} 
+
+<form action= "{% url 'buscar' %}" method="GET">{% csrf_token %}
+
+    <input type="number" placeholder="COMISION" name="comision" id="comision">
+    <input type="submit" value="buscar">
+
+
+</form>
+
+{% endblock %}
+
+{% block titulo %} 
+
+    <h1>BUSCANDO CURSOS</h1>
+
+{% endblock %} 

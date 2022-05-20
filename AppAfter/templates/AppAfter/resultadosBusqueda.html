@@ -1,0 +1,33 @@
+{% extends "AppAfter/padre.html" %} 
+
+{% load static %}
+
+{% block contenidoQueCambia %} 
+
+<h1>estamos buscando los cursos de la comision {{comision}}</h1>
+
+{% if cursos %} 
+
+<ul>
+{% for curso in cursos %} 
+    <li>{{curso.nombre}}</li>
+    <li>{{curso.comision}}</li>
+    <br>
+
+{% endfor %}  
+</ul>
+
+{% else %}
+<p>NO SE ENCONTRARON DATOS PARA ESA COMISION</p>
+{% endif %}   
+
+
+{% else %}
+<h1 style="color:red">{{respuesta}}</h1>
+{% endif %}
+
+{% block titulo %} 
+
+    <h1>cursos!</h1>
+
+{% endblock %} 
