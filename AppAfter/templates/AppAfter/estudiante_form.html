@@ -1,0 +1,21 @@
+{% extends "AppAfter/padre.html" %} 
+
+{% load static %}
+
+{% block contenidoQueCambia %} 
+
+<p>
+    <form method="post">{% csrf_token %}
+        
+        {{form.as_p}}   
+        <input type="submit" value="ENVIAR">
+
+    </form>
+</p>
+{% endblock %}
+
+{% block titulo %} 
+
+    <h1>ESTUDIANTES!</h1>
+
+{% endblock %} 

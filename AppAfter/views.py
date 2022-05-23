@@ -4,7 +4,9 @@ from datetime import date
 import datetime
 from django.template import Template, Context, loader
 from .models import *
-from AppAfter.forms import CursoFormulario
+from AppAfter.forms import *
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 def persona(request):
     dia=datetime.now().year
@@ -35,6 +37,7 @@ def estudiantes(request):
 def entregables(request):
      return render(request, "AppAfter/entregables.html")
 
+# CREATE 
 def cursos(request):
     if request.method =='POST':
 
@@ -62,11 +65,67 @@ def buscar(request):
         respuesta="No se ingreso ninguna comision"
         return render(request, "AppAfter/resultadosBusqueda.html", {'respuesta':respuesta})
 
-def leerCursos(request):
-    cursos=Curso.objects.all()
-    return(request, "AppAfter/cursos.html", {'cursos': cursos} )
+#READ
+def leerProfes(request):
+    profesores=Profesor.objects.all()
+    contexto={'profesores': profesores}
+    return render(request, "AppAfter/profesores.html", contexto )
+
+#DELETE
+def eliminarProfe(request, nombre):
+    profesor=Profesor.objects.get(nombre=nombre)
+    profesor.delete()
+
+    profesores=Profesor.objects.all()
+    contexto={'profesores': profesores}
+
+    return render(request, "AppAfter/profesores.html", contexto)
+
+#UPDATE
+def editarProfesor(request, nombre):
+    profesor=Profesor.objects.get(nombre=nombre)
+    if request.method == 'POST':
+        formulario=ProfeFormulario(request.POST)
+        if formulario.is_valid():
+            informacion=formulario.cleaned_data
+            profesor.nombre=informacion['nombre']
+            profesor.apellido=informacion['apellido']
+            profesor.email=informacion['email']
+            profesor.profesion=informacion['profesion']
+            profesor.save()
+            profesores=Profesor.objects.all()
+            contexto={'profesores': profesores}
+
+            return render(request,"AppAfter/profesores.html", contexto)
+    else:
+        formulario=ProfeFormulario(initial={'nombre':profesor.nombre, 'apellido':profesor.apellido, 'email':profesor.email, 'profesion':profesor.profesion})
+    return render(request,"AppAfter/editarProfesor.html", {'formulario':formulario, 'nombre':nombre})
+
+#-------------------------------------------------------------------------------------------------------------
+class EstudiantesList(ListView):
+    model = Estudiante
+    template_html= "AppAfter/estudiante_list.html"
+
+class EstudiantesDetalle(DetailView):
+    model = Estudiante
+    template_html= "AppAfter/estudiante_detail.html"
 
 
+class EstudiantesCreacion(CreateView):
+    model = Estudiante
+    success_url=reverse_lazy("estudiante_listar")
+    fields=['nombre','apellido', 'email']
+
+class EstudiantesEdicion(UpdateView):
+    model = Estudiante
+    success_url = reverse_lazy("estudiante_listar")
+    fields=['nombre','apellido', 'email']
+
+
+class EstudiantesEliminacion(DeleteView):
+    model = Estudiante
+    success_url = reverse_lazy("estudiante_listar")
+    fields=['nombre','apellido', 'email']
 
 
     
