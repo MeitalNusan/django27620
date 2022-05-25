@@ -1,0 +1,24 @@
+{% extends "AppAfter/padre.html" %} 
+
+{% load static %}
+
+{% block contenidoQueCambia %} 
+
+<h1>ESTAMOS MODIFICANDO EL USUARIO DE {{usuario}}</h1>
+
+<form action="{% url 'editarPerfil' %}" method='POST'>{% csrf_token %}
+
+    <table>
+        {{ formulario.as_table }}
+    </table>
+
+    <input type="submit" value="GUARDAR">
+</form>
+
+{% endblock %}
+
+{% block titulo %} 
+
+    <h1>MODIFICANDO PERFILES</h1>
+
+{% endblock %} 

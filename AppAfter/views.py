@@ -171,5 +171,26 @@ def register(request):
         form = UserRegistrationForm()
         return render(request, "AppAfter/register.html", {'form':form})
 
+def editarPerfil(request):
+    return render(request, "AppAfter/editarPerfil.html")
+
+@login_required
+def editarPerfil(request):
+    usuario=request.user
+    
+    if request.method == "POST":
+        formulario=UserEditForm(request.POST, instance=usuario)
+        if formulario.is_valid():
+            informacion=formulario.cleaned_data
+            usuario.email=informacion['email']
+            usuario.password1=informacion['password1']
+            usuario.password2=informacion['password2']
+            usuario.save()
+            return render(request,"AppAfter/inicio.html", {'usuario': usuario, 'mensaje':'Usuario Modificado'})
+
+    else:
+        formulario=UserEditForm(instance=usuario)
+        return render(request,"AppAfter/editarPerfil.html",{'formulario':formulario, 'usuario':usuario.username})
+
 
     
