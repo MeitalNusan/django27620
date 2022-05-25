@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime 
+from django.contrib.auth.models import User
 
 class Persona(models.Model):
     nombre=models.CharField(max_length=50)
@@ -35,4 +36,8 @@ class Entreglable(models.Model):
     nombre=models.CharField(max_length=50)
     fecha_entrega=models.DateField()
     entregado=models.BooleanField()
+
+class Avatar(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    avatar=models.ImageField(upload_to='avatar', blank=True, null=True)
 
