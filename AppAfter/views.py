@@ -7,6 +7,14 @@ from .models import *
 from AppAfter.forms import *
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+
+
+
 
 def persona(request):
     dia=datetime.now().year
@@ -72,6 +80,7 @@ def leerProfes(request):
     return render(request, "AppAfter/profesores.html", contexto )
 
 #DELETE
+@login_required
 def eliminarProfe(request, nombre):
     profesor=Profesor.objects.get(nombre=nombre)
     profesor.delete()
@@ -102,13 +111,13 @@ def editarProfesor(request, nombre):
     return render(request,"AppAfter/editarProfesor.html", {'formulario':formulario, 'nombre':nombre})
 
 #-------------------------------------------------------------------------------------------------------------
-class EstudiantesList(ListView):
+class EstudiantesList(LoginRequiredMixin, ListView):
     model = Estudiante
-    template_html= "AppAfter/estudiante_list.html"
+    template_name= "AppAfter/estudiante_list.html"
 
-class EstudiantesDetalle(DetailView):
+class EstudiantesDetalle(LoginRequiredMixin, DetailView):
     model = Estudiante
-    template_html= "AppAfter/estudiante_detail.html"
+    template_name= "AppAfter/estudiante_detail.html"
 
 
 class EstudiantesCreacion(CreateView):
@@ -126,6 +135,41 @@ class EstudiantesEliminacion(DeleteView):
     model = Estudiante
     success_url = reverse_lazy("estudiante_listar")
     fields=['nombre','apellido', 'email']
+
+
+def login_request(request):
+    if request.method == "POST":
+        formulario1=AuthenticationForm(request=request, data=request.POST)
+        if formulario1.is_valid():
+            usuario=formulario1.cleaned_data.get('username')
+            clave=formulario1.cleaned_data.get('password')
+
+            user=authenticate(username=usuario, password=clave)
+            if user is not None:
+                login(request, user)
+                return render(request,"AppAfter/inicio.html", {'usuario': usuario, 'mensaje': "Bienvenido al sistema"})
+
+            else:
+                return render(request, "AppAfter/inicio.html", {'mensaje': 'usuario incorrecto, vuelva a logearse'})
+        else:
+            return render(request, "AppAfter/inicio.html",{'mensaje': 'Error, formulario invalido, vuelva a logearse'})
+    else:
+        formulario1=AuthenticationForm()
+        return render(request,"AppAfter/login.html", {'formulario1': formulario1})
+
+def register(request):
+    if request.method == "POST":
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            username=form.cleaned_data['username']
+            form.save()
+            return render(request,"AppAfter/inicio.html", {'mensaje': f"usuario {username} creado"})
+        else:
+            return render(request, "AppAfter/inicio.html",{'mensaje':'formulario incorrecto'})
+
+    else:
+        form = UserRegistrationForm()
+        return render(request, "AppAfter/register.html", {'form':form})
 
 
     

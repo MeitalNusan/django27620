@@ -1,0 +1,20 @@
+{% extends "AppAfter/padre.html" %} 
+
+{% load static %}
+
+{% block contenidoQueCambia %} 
+
+<p>
+    <form method="post">{% csrf_token %}
+        
+        {{form.as_p}}   
+       <button type="submit">REGISTRO</button>
+    </form>
+</p>
+{% endblock %}
+
+{% block titulo %} 
+
+    <h1>CREACION DE USUARIOS</h1>
+
+{% endblock %} 
