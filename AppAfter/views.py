@@ -38,9 +38,9 @@ def persona(request):
 
 
 def inicio(request):
-    
-    avatar=Avatar.objects.filter(user=request.user.id)
-    return render(request, 'AppAfter/inicio.html', {'url': avatar[0].imagen.url})
+    avatar=Avatar.objects.filter(user=request.user)
+    return render(request, 'AppAfter/inicio.html', {"url":avatar[0].avatar.url})
+ 
 
 
 
@@ -197,13 +197,14 @@ def editarPerfil(request):
 
     else:
         formulario=UserEditForm(instance=usuario)
-        return render(request,"AppAfter/editarPerfil.html",{'formulario':formulario, 'usuario':usuario.username})
+    return render(request,"AppAfter/editarPerfil.html",{'formulario':formulario, 'usuario':usuario.username})
 
 #-------------------------------------------------------------------------------------------------------
 @login_required
 def agregarAvatar(request):
     user=User.objects.get(username=request.user)
     if request.method == 'POST':
+        formulario=AuthenticationForm(request=request, data=request.POST)
         formulario=AvatarForm(request.POST, request.FILES)
         if formulario.is_valid():
 
@@ -216,3 +217,5 @@ def agregarAvatar(request):
     else:
         formulario=AvatarForm()
     return render(request, 'AppAfter/agregarAvatar.html', {'formulario':formulario, 'usuario':user})
+
+    
