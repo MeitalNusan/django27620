@@ -12,6 +12,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
 
 
 
@@ -32,8 +34,15 @@ def persona(request):
 
     return HttpResponse(documento)
 
+
+
+
 def inicio(request):
-    return render(request, 'AppAfter/inicio.html')
+    
+    avatar=Avatar.objects.filter(user=request.user.id)
+    return render(request, 'AppAfter/inicio.html', {'url': avatar[0].imagen.url})
+
+
 
 def profesores(request):
     return render(request, "AppAfter/profesores.html")
@@ -171,8 +180,6 @@ def register(request):
         form = UserRegistrationForm()
         return render(request, "AppAfter/register.html", {'form':form})
 
-def editarPerfil(request):
-    return render(request, "AppAfter/editarPerfil.html")
 
 @login_required
 def editarPerfil(request):
@@ -192,5 +199,20 @@ def editarPerfil(request):
         formulario=UserEditForm(instance=usuario)
         return render(request,"AppAfter/editarPerfil.html",{'formulario':formulario, 'usuario':usuario.username})
 
+#-------------------------------------------------------------------------------------------------------
+@login_required
+def agregarAvatar(request):
+    user=User.objects.get(username=request.user)
+    if request.method == 'POST':
+        formulario=AvatarForm(request.POST, request.FILES)
+        if formulario.is_valid():
 
-    
+            avatarViejo=Avatar.objects.get(user=request.user)
+            if(avatarViejo.avatar):
+                avatarViejo.delete()
+            avatar=Avatar(user=user, avatar=formulario.cleaned_data['avatar'])
+            avatar.save()
+            return render(request, 'AppAfter/inicio.html', {'usuario':user, 'mensaje':'AVATAR AGREGADO EXITOSAMENTE'})
+    else:
+        formulario=AvatarForm()
+    return render(request, 'AppAfter/agregarAvatar.html', {'formulario':formulario, 'usuario':user})

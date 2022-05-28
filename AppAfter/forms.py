@@ -37,4 +37,7 @@ class UserEditForm(UserCreationForm):
         fields=('email','password1','password2','last_name','first_name')
         help_texts={campito:"" for campito in fields}
 
+class AvatarForm(forms.Form):
+    avatar=forms.ImageField(label="avatar")
+
 

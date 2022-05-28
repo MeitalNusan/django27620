@@ -1,22 +1,16 @@
-{% extends "AppAfter/padre.html" %} 
+{% extends "AppAfter/padre.html" %}
 
 {% load static %}
 
-{% block contenidoQueCambia %} 
+{% block contenidoQueCambia %}
 
-<h1>HOLA {{usuario}}!</h1>
+<h1>Hola {{usuario}}!</h1>
 
 {% endblock %}
 
-{% block titulo %} 
+{% block titulo %}
 
-    <h1>{{mensaje}}</h1>
-   
+    <h1 > {{mensaje}} </h1>
+    <img src="{{url}}" alt=""/>
 
-{% if not login %}
-
-{% endif %}
-    
-    
-    
-{% endblock %} 
+{% endblock %}

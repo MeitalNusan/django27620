@@ -37,7 +37,7 @@ class Entreglable(models.Model):
     fecha_entrega=models.DateField()
     entregado=models.BooleanField()
 
+
 class Avatar(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE)
-    avatar=models.ImageField(upload_to='avatar', blank=True, null=True)
-
+    avatar= models.ImageField(upload_to='avatar', blank=True, null=True)
